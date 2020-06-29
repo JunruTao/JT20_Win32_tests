@@ -5,3 +5,8 @@ Have tried different options creating a GUI for windows, now I found win32(Altho
 Having studied through few tutorials from youtube and udemy.com, now there are a very basic window application done from the scratch.
 It was quite hard at the begining and I struggled with Unicode variable type such as `LPCWSTR` , `LRESULT`, however as long as being 
 patient reading throught the Win32 API documents, it is very easy to get started with the code.
+
+### 8:01 PM BST - [Update]
+Enbedding win-OpenGL context/GLEW into Win32 Desktop Program. 
+* Status: `SUCCESS`
+***
