@@ -10,3 +10,13 @@ patient reading throught the Win32 API documents, it is very easy to get started
 Enbedding win-OpenGL context/GLEW into Win32 Desktop Program. 
 * Status: `SUCCESS`
 ***
+### 7/1/2020 Learning COM in Win32, File Browser
+Update with new Project:
+  * Learning Using COM handling objects
+  * Create menus and Open up file explorer dialog
+  * using win32 smartpointers
+  * planning on encapsulate windows
+
+Next task experimenting with graphics in Win32
+* Status: `SUCCESS`
+***
