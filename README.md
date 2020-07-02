@@ -20,3 +20,8 @@ Update with new Project:
 Next task experimenting with graphics in Win32
 * Status: `SUCCESS`
 ***
+## 7/2/2020 Windows Base as Template
+Update with new Project:
+  * Encapsulation of base_window as a template
+  * window main object is derive from a type of `BaseWindow`
+  * Seprate `win_main` from `main.cpp`, created header/cpp 
