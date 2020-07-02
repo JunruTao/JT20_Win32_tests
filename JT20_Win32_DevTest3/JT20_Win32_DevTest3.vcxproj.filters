@@ -9,21 +9,35 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Other">
+      <UniqueIdentifier>{c4307478-98f1-48b5-9042-2922fbde080d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main_window.cpp">
+    <ClCompile Include="win_main.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win_paint_circle.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="base_window.h">
+    <ClInclude Include="base_window_CORE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="main_window.h">
+    <ClInclude Include="win_main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="win_paint_circle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="DeclareDPIAware.manifest">
+      <Filter>Other</Filter>
+    </Manifest>
   </ItemGroup>
 </Project>

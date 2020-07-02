@@ -1,13 +1,16 @@
 #include <Windows.h>
 #include "base_window_CORE.h"
-#include "win_main.h"
+//#include "win_main.h"
+#include "win_paint_circle.h"
+
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
-    MainWindow win;
+    CircleWindow win;
+    //MainWindow win;
 
-    if (!win.Create(L"Learn to Program Windows", WS_OVERLAPPEDWINDOW))
+    if (!win.Create(L"Drawing a Circle - D2D1", WS_OVERLAPPEDWINDOW))
     {
         return 0;
     }

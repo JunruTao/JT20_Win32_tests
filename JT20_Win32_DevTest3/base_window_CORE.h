@@ -110,3 +110,14 @@ protected:
 	HWND m_hwnd;
 
 };
+
+
+template <class T> 
+void SafeRelease(T** ppT)
+{
+	if (*ppT)
+	{
+		(*ppT)->Release();
+		*ppT = NULL;
+	}
+}

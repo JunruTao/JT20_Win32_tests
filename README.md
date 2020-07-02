@@ -25,3 +25,8 @@ Update with new Project:
   * Encapsulation of base_window as a template
   * window main object is derive from a type of `BaseWindow`
   * Seprate `win_main` from `main.cpp`, created header/cpp 
+
+  #### 5:16 PM BST Update on PJ-Dev3
+  * New Window Class, draw circle.
+  * Using Direct2D library to draw a circle procedurally.
+  * Add `DeclareDPIAware.manifest` to adapt different DPI rendertargets. 
