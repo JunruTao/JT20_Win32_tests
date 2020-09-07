@@ -1,7 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <windows.h>
+#include <stdio.h>
 #include <gl/GL.h>
+
 
 HDC dvcContext; //where to store pixel data
 HGLRC rdrContext; //handle to OpenGL context
@@ -20,39 +22,65 @@ LPCWSTR Error02 = L"Error 02: ParentWindowCreateW issue to tend to"; //  <---- *
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 
-GLuint TextureCreation(INT16 index)
+GLuint loadBMP_custom(const char* imagepath)
 {
-    GLuint textureID;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID); //this is 1st binding
+    unsigned char header[54]; // Each BMP file begins by a 54-bytes header
+    unsigned int dataPos;     // Position in the file where the actual data begins
+    unsigned int width, height;
+    unsigned int imageSize;   // = width*height*3
+    // Actual RGB data
+    unsigned char* data;
 
-	struct color 
+    FILE* file = fopen(imagepath, "rb");
+    if (!file)
     {
-		unsigned char c[4]; //RGBA
-	};
-
-    color col[16 * 16] = {};
-
-    for (int i = 0;i < 16 * 16;++i)
-    {
-
-		col[i].c[0] = rand() % 0xff;
-		col[i].c[1] = rand() % 0xff;
-		col[i].c[2] = rand() % 0xff;
-
+        printf("Image could not be opened\n"); return 0;
+    }
+    if (fread(header, 1, 54, file) != 54) { // If not 54 bytes read : problem
+        printf("Not a correct BMP file\n");
+        return false;
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, col);
+    if (header[0] != 'B' || header[1] != 'M') {
+        printf("Not a correct BMP file\n");
+        return 0;
+    }
+
+    // Read ints from the byte array
+    dataPos = *(int*)&(header[0x0A]);
+    imageSize = *(int*)&(header[0x22]);
+    width = *(int*)&(header[0x12]);
+    height = *(int*)&(header[0x16]);
+    // Some BMP files are misformatted, guess missing information
+    if (imageSize == 0)    imageSize = width * height * 3; // 3 : one byte for each Red, Green and Blue component
+    if (dataPos == 0)      dataPos = 54; // The BMP header is done that way
+    // Create a buffer
+    data = new unsigned char[imageSize];
+    // Read the actual data from the file into the buffer
+    fread(data, 1, imageSize, file);
+    //Everything is in memory now, the file can be closed
+    fclose(file);
+
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+
+    // Give the image to OpenGL
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
+    // "Bind" the newly created texture : all future texture functions will modify this texture
+    delete[] data;
     return textureID;
 }
 
 
 void RenderSquare()
 {
+
+
     static GLuint plate = glGenLists(1);
     static bool first = true;
     static float nsize = 0.4f;
@@ -61,7 +89,7 @@ void RenderSquare()
     {
         first = false;
 
-        GLuint htex = TextureCreation(1);
+        GLuint htex = loadBMP_custom("C:/Users/1/cpp2020_Projects/JT20_Win32_test/JT20_Win32_GL_test_02/hello.bmp");
         glBindTexture(GL_TEXTURE_2D, htex);
         glNewList(plate, GL_COMPILE);
         glBegin(GL_QUADS);
@@ -121,11 +149,14 @@ void RenderSquare()
             glVertex3f(-nsize, nsize, -nsize);
 
         glEnd();
-        glEndList();        // Done Building The box List
+        glEndList();                                    // Done Building The box List
         glCallList(plate);
     }
     else
         glCallList(plate);
+
+
+
 }
 
 
@@ -185,6 +216,7 @@ int WINAPI WinMain(
     glEnable(GL_DEPTH_TEST);
 
     bool running = true;
+    static float anglecu = 0.0f;
     /*[PART 2.3]----THE 'BIG WHILE LOOP'----*/
     while (running)
     {
@@ -204,9 +236,33 @@ int WINAPI WinMain(
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glPushMatrix();
+
+        
+        glRotatef(anglecu, 1.0f, 1.0f, 0.0f);
+        anglecu += 0.5f;
+        //glRotatef(-0.8f, 0.0f, 0.0f, 1.0f);
+        
         RenderSquare();
-        glRotatef(1.9f,  1.0f, 1.0f, 0.0f);
-        glRotatef(-0.8f, 0.0f, 0.0f, 1.0f);
+        
+        
+        
+        glPopMatrix();
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBegin(GL_TRIANGLES);
+        glColor4f(0.0f, 1.0f, 1.0f, 0.5f);
+        glVertex3f(0, 0, -1);
+        glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+        glVertex3f(-1, 0, -1);
+        glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+        glVertex3f(-1, 1, -1);
+        glEnd();
+
+
+        glDisable(GL_BLEND);
+
         SwapBuffers(dvcContext);
     }
 
@@ -224,6 +280,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT userMessage, WPARAM wParam, LPARAM lPar
 
     switch (userMessage)
     {
+        /*[Part 4.3 -start]-------------Menu Creations in here---------------*/
     case WM_CREATE:
     {
 
@@ -277,4 +334,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT userMessage, WPARAM wParam, LPARAM lPar
     return DefWindowProc(hWnd, userMessage, wParam, lParam);
 }
 
+/*
+GLuint color_tex,depth_tex,framebuffer;
 
+    glGenTextures(1, &color_tex);
+    glBindTexture(GL_TEXTURE_2D, color_tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 700,700,0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+
+    glGenTextures(1, &depth_tex);
+    glBindTexture(GL_TEXTURE_2D, depth_tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 700,700, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+
+    glGenFramebuffersEXT(1, &framebuffer);
+
+
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer);
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depth_tex, 0); //mipmap level
+
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer);
+     //drawwing smth
+
+     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+     //drawwing smth
+
+     SwapBuffer(hdc);
+
+*/
