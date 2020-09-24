@@ -91,7 +91,11 @@ void RenderSquare()
     {
         first = false;
 
-        GLuint htex = SOIL_load_OGL_texture("C:/Users/1/cpp2020_Projects/JT20_Win32_test/JT20_Win32_GL_test_04/hello.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
+        GLuint htex = SOIL_load_OGL_texture(
+            "C:/Users/1/cpp2020_Projects/JT20_Win32_test/JT20_Win32_GL_test_04/hello.png", 
+            SOIL_LOAD_AUTO, 
+            SOIL_CREATE_NEW_ID, 
+            SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
         glBindTexture(GL_TEXTURE_2D, htex);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

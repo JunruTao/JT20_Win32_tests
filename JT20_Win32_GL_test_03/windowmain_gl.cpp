@@ -333,37 +333,3 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT userMessage, WPARAM wParam, LPARAM lPar
 
     return DefWindowProc(hWnd, userMessage, wParam, lParam);
 }
-
-/*
-GLuint color_tex,depth_tex,framebuffer;
-
-    glGenTextures(1, &color_tex);
-    glBindTexture(GL_TEXTURE_2D, color_tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 700,700,0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
-
-    glGenTextures(1, &depth_tex);
-    glBindTexture(GL_TEXTURE_2D, depth_tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 700,700, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
-
-    glGenFramebuffersEXT(1, &framebuffer);
-
-
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer);
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depth_tex, 0); //mipmap level
-
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer);
-     //drawwing smth
-
-     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-     //drawwing smth
-
-     SwapBuffer(hdc);
-
-*/
